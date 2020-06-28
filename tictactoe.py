@@ -157,7 +157,7 @@ def main():
         # Place the symbol in the desired position
         game.update_board(coords, turn)
 
-        # Check if game can't be won"
+        # Check if game can't be won
         if game.is_game_a_bogey():
             print("Game is a bogey, therefore no one winners")
             break
