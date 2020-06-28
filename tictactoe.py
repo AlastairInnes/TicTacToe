@@ -8,8 +8,8 @@ class Symbol:
     empty = 3
 
 
-# Class that sets up the game
-class TicTacToe(object):
+# Class that represents the TicTacToe game
+class TicTacToe():
 
     def __init__(self):
 
@@ -23,16 +23,19 @@ class TicTacToe(object):
         # Dict to translate the int symbols to string representations
         self.symbol_to_board = {Symbol.cross: "X",
                                 Symbol.nought: "O",
-                                Symbol.empty: "E"}
+                                Symbol.empty: "*"}
 
+        # Win status will remain false until someone wins the game
         self.win_status = False
 
+    # Updates board with symbol depending on the
     def update_board(self, coords, turn):
         x, y = coords
 
         symbol = symbol_on_turn(turn)
         self.board[x][y] = symbol
 
+    # Prints out a representation of the game board to the terminal
     def print_current_board(self):
 
         for i, row in enumerate(self.board):
@@ -47,6 +50,7 @@ class TicTacToe(object):
                 print(self.symbol_to_board[symbol], end=end)
         print()
 
+    # Checks that there if the game has been won
     def check_win(self):
 
         results = [np.diag(self.board), np.diag(np.fliplr(self.board))]
@@ -57,13 +61,19 @@ class TicTacToe(object):
 
         for result in results:
             if np.allclose(result, self.crosswin):
-                print("Congrats! Crosses win!")
-                self.win_status = True
+                self.win_message("Crosses")
                 return
             elif np.allclose(result, self.noughtwin):
-                print("Congrats! Noughts win!")
-                self.win_status = True
+                self.win_message("Noughts")
                 return
+
+    def win_message(self, winner):
+        print("Congrats! {} win!".format(winner))
+        self.win_status = True
+
+    def is_game_a_bogey(self):
+
+        return np.all(self.board != Symbol.empty)
 
     # Function that takes user input for the coords, and ensures their validity
     def receive_input(self):
@@ -90,7 +100,7 @@ class TicTacToe(object):
 
             # Check that the board position hasn't got a symbol placed on it
             if self.board[x][y] != Symbol.empty:
-                print("You must choose a position that doesn't have a symbol already placed on it")
+                print("You must choose a position that doesn't have a symbol already placed on it!")
                 continue
 
             invalid = False
@@ -106,9 +116,13 @@ def symbol_on_turn(turn):
 
 
 def main():
+    # player1 = input("Please insert the name of player 1")[:12]
+    # player2 = input("Please insert the name of player 2")[:12]
+
     game = TicTacToe()
-    game.print_current_board()
     turn = True
+
+    print("Welcome to TicTacToe!\n")
 
     while not game.win_status:
 
@@ -125,7 +139,14 @@ def main():
         game.update_board(coords, turn)
         game.print_current_board()
 
+        # Check if game is a "bogey"
+        if game.is_game_a_bogey():
+            print("Game is a bogey, therefore no one winners")
+            break
+
+        # Check if the game can be won
         game.check_win()
         turn = not turn
+
 
 main()
