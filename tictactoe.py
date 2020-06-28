@@ -45,7 +45,7 @@ class TicTacToe:
             for j, col in enumerate(row):
                 symbol = self.board[i][j]
 
-                if j < 2:
+                if j < len(row) - 1:
                     end = " | "
                 else:
                     end = "\n"
@@ -157,7 +157,7 @@ def main():
         # Place the symbol in the desired position
         game.update_board(coords, turn)
 
-        # Check if game is a "bogey"
+        # Check if game can't be won"
         if game.is_game_a_bogey():
             print("Game is a bogey, therefore no one winners")
             break
