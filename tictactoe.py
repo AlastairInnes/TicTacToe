@@ -30,11 +30,10 @@ class TicTacToe:
 
     # Updates board with symbol depending on which player's turn it is
     def update_board(self, coords, turn):
-        x, y = coords
 
         # Get the symbol relative to the turn and add it to correct position
         symbol = symbol_on_turn(turn)
-        self.board[x][y] = symbol
+        self.board[coords[0]][coords[1]] = symbol
 
         self.print_current_board()
 
@@ -91,32 +90,29 @@ class TicTacToe:
 
         invalid = True
         while invalid:
-
             try:
-                x = int(input("Please input the x position you want to choose: "))
-                y = int(input("Please input the y position you want to choose: "))
+                x, y = input("Input the 2 coords you want to place your symbol, separated by a space: ").split(" ")
+                coords = [int(x), int(y)]
 
-            # If the inputs aren't of integer format, make user re-enter them
+            # Error is risen when user doesn't provide valid input
             except ValueError:
-
-                print("Please use an integer value")
+                print("Please provide 2 integer values separated by a space")
                 continue
 
-            # If inputs are out of range, make user re-enter them
-            if x < 0 or x > 2:
-                print("Please use a valid x value, e.g. 0, 1 or 2")
-                continue
-            if y < 0 or y > 2:
-                print("Please use a valid y value, e.g. 0, 1 or 2")
+            # Remove coordinates that are invalid
+            coords = [i for i in coords if 0 <= i <= 2]
+            if len(coords) != 2:
+                print("Please use valid coordinates: e.g. 0, 1 or 2")
                 continue
 
             # Check that the board position hasn't got a symbol placed on it
-            if self.board[x][y] != Symbol.EMPTY:
+            if self.board[coords[0]][coords[1]] != Symbol.EMPTY:
                 print("You must choose a position that doesn't have a symbol already placed on it!")
                 continue
 
             invalid = False
-        return [x, y]
+
+        return coords
 
 
 # Function that determines what symbol is to be placed on the board
